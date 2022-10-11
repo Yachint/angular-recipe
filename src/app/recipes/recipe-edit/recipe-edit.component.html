@@ -1,10 +1,16 @@
 <div class="row">
 	<div class="col-xs-12">
-		<form>
+		<form [formGroup]="recipeForm" (ngSubmit)="onSubmit()">
 			<div class="row">
 				<div class="col-xs-12">
-					<button type="submit" class="btn btn-success">Save</button>&nbsp;
-					<button type="button" class="btn btn-danger">Cancel</button>
+					<button 
+						type="submit"
+						class="btn btn-success"
+						[disabled]="!recipeForm.valid"
+					>
+						Save
+					</button>&nbsp;
+					<button type="button" (click)="onCancel()" class="btn btn-danger">Cancel</button>
 				</div>
 			</div>
 
@@ -15,6 +21,7 @@
 						<input
 							type="text"
 							id="name"
+							[formControlName]="'name'"
 							class="form-control">
 					</div>
 				</div>
@@ -23,10 +30,12 @@
 			<div class="row">
 				<div class="col-xs-12">
 					<div class="form-group">
-						<label for="imagePath">Image URL</label>
+						<label for="imageUrl">Image URL</label>
 						<input
 							type="text"
-							id="imagePath"
+							id="imageUrl"
+							[formControlName]="'imageUrl'"
+							#imageUrl
 							class="form-control">
 					</div>
 				</div>
@@ -34,7 +43,7 @@
 
 			<div class="row">
 				<div class="col-xs-12">
-					<img src="" class="img-responsive">
+					<img [src]="imageUrl.value" class="img-responsive">
 				</div>
 			</div>
 
@@ -44,6 +53,7 @@
 						<label for="description">Description</label>
 						<textarea
 							type="text"
+							[formControlName]="'description'"
 							id="description"
 							class="form-control"
 							rows="6"></textarea>
@@ -52,24 +62,45 @@
 			</div>
 
 			<div class="row">
-				<div class="col-xs-12">
-					<div class="row">
+				<div class="col-xs-12" [formArrayName]="'ingredients'">
+					<div 
+						class="row"
+						*ngFor="let ingredient of controls; let i = index"
+						[formGroupName]="i"
+						style="margin-top: 10px;"
+					>
 						<div class="col-xs-8">
 							<input
 								type="text"
+								[formControlName]="'name'"
 								class="form-control">
 						</div>						
 
 						<div class="col-xs-2">
 							<input
 								type="number"
+								[formControlName]="'amount'"
 								class="form-control">
 						</div>						
 
 						<div class="col-xs-2">
-							<button class="btn btn-danger">X</button>
+							<button 
+								class="btn btn-danger"
+								type="button"
+								(click)="onDeleteIngredient(i)">
+								X
+							</button>
 						</div>						
 					</div>
+					<hr>
+					<div class="row">
+						<div class="col-xs-12">
+							<button class="btn btn-success" type="button" (click)="onAddIngredient()">
+								Add ingredient
+							</button>
+						</div>
+					</div>
+
 				</div>
 			</div>
 
