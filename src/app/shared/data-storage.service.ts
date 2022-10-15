@@ -10,7 +10,7 @@ import {RecipeService} from "../recipes/services/recipe.services";
 export class DataStorageService {
 	constructor(
 		private http: HttpClient,
-		private recipeService: RecipeService
+		private recipeService: RecipeService,
 	) {}	
 
 	storeRecipes(){

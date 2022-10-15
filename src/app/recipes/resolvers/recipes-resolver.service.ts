@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
-import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from "@angular/router";
-import {Observable} from "rxjs";
+import {ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot} from "@angular/router";
+import {catchError, Observable, throwError} from "rxjs";
 import {DataStorageService} from "src/app/shared/data-storage.service";
 import {Recipe} from "../recipe.model";
 import {RecipeService} from "../services/recipe.services";
@@ -11,7 +11,8 @@ import {RecipeService} from "../services/recipe.services";
 export class RecipeResolverService implements Resolve<Recipe[]> {
 	constructor(
 		private dataStorageService: DataStorageService,
-		private recipeService: RecipeService
+		private recipeService: RecipeService,
+		private router: Router
 	) {}
 
 	resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Recipe[] | Observable<Recipe[]> | Promise<Recipe[]> {
@@ -19,6 +20,11 @@ export class RecipeResolverService implements Resolve<Recipe[]> {
 		// We don't need to tell about data being fetched as we have already done using tap operator
 		const recipes = this.recipeService.getRecipes();
 
-		return recipes.length === 0 ? this.dataStorageService.fetchRecipes() : recipes;	
+		return recipes.length === 0 ? this.dataStorageService.fetchRecipes().pipe(
+			catchError(errRes => {
+				this.router.navigate(['error']);
+				return throwError(errRes);
+			})
+		): recipes;	
 	}	
 }
