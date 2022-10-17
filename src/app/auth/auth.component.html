@@ -55,6 +55,15 @@
                 >
                     Switch to {{ isLoginMode ? "Sign Up" : "Login" }}
                 </button>
+                <br />
+                <button
+                    class="btn btn-warning"
+                    type="button"
+                    style="color: black; margin-top: 10px"
+                    (click)="onAutoLogin()"
+                >
+                    💡 Auto-Login (Demo)
+                </button>
             </div>
         </form>
     </div>

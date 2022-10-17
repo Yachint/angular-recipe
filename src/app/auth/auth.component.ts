@@ -31,6 +31,15 @@ export class AuthComponent {
         this.errMsg = null;
     }
 
+    onAutoLogin() {
+        this.authForm.form.patchValue({
+            email: 'test@test.com',
+            password: 'testing',
+        });
+
+        this.onSubmit();
+    }
+
     onSubmit() {
         if (!this.authForm.valid) {
             return;
